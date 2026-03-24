@@ -37,32 +37,25 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     const score = data?.riskAnalysis?.score ?? 0;
-    const reasons = data?.riskAnalysis?.reasons ?? [];
 
-    const threshold = 0.5;
-
-    if (score >= threshold) {
+    if (score >= 0.5) {
       return res.status(200).json({
         success: true,
-        score,
-        reasons
+        score
       });
     }
 
     return res.status(200).json({
       success: false,
       score,
-      reasons,
-      message: "Interação suspeita, possível bot."
+      message: "Interação suspeita"
     });
 
   } catch (error) {
 
-    console.error("Erro captcha:", error);
-
     return res.status(500).json({
       success: false,
-      error: "Erro ao validar captcha"
+      error: error.message
     });
 
   }
